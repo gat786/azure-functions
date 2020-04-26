@@ -1,16 +1,18 @@
+const quotes_lib = require('./get-quote');
+
 module.exports = async function (context, req) {
+    
     context.log('JavaScript HTTP trigger function processed a request.');
 
-    if (req.query.name || (req.body && req.body.name)) {
-        context.res = {
-            // status: 200, /* Defaults to 200 */
-            body: "Hello " + (req.query.name || req.body.name)
-        };
-    }
-    else {
-        context.res = {
-            status: 400,
-            body: "Please pass a name on the query string or in the request body"
-        };
+    let quotes = new quotes_lib();
+    let random_quote = quotes.getQuote();
+
+    context.res.set('content-type', 'application/json')
+    context.res = {
+        code: 200,
+        body: random_quote,
+        headers : {
+            "Content-Type":'application/json'
+        }
     }
 };
